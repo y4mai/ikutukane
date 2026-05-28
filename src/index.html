@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YOLOv8 Object Detection0919-v2</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ONNX Runtime Web - ローカルファイル -->
+    <script>
+        window.ortWasmPathOverride = './lib/';
+    </script>
+    <script src="./lib/ort.min.js"></script>
+    
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/result.css">
+    <link rel="stylesheet" href="css/theme-selector.css">
+    <link rel="stylesheet" href="css/quiz.css">
+</head>
+<body>
+    <div class="container">
+        <div class="camera"><!-- 検出結果の表示 -->
+            <video id="video" autoplay muted playsinline></video>
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="result">
+
+            <!-- 桁ごとの整理 -->
+            <div class="digit-row">
+                <!-- 100の位 -->
+                <div class="digit-column">
+                    <div class="digit-label">100</div>
+                    <div class="coin_id">
+                        <div class="coin_info">
+                            <span class="coin_name">５００えん</span>
+                            <span class="coin_count" onclick="toggleCoinCountDisplay('500yen')"><span id="500yen">0</span>　まい</span>
+                            <div class="coin_images empty" id="500yen-images"></div>
+                        </div>
+                        
+                        <div class="coin_info">
+                            <span class="coin_name">１００えん</span>
+                            <span class="coin_count" onclick="toggleCoinCountDisplay('100yen')"><span id="100yen">0</span>　まい</span>
+                            <div class="coin_images empty" id="100yen-images"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10の位 -->
+                <div class="digit-column">
+                    <div class="digit-label">10</div>
+                    <div class="coin_id">
+                        <div class="coin_info">
+                            <span class="coin_name">５０えん</span>
+                            <span class="coin_count" onclick="toggleCoinCountDisplay('50yen')"><span id="50yen">0</span>　まい</span>
+                            <div class="coin_images empty" id="50yen-images"></div>
+                        </div>
+                        
+                        <div class="coin_info">
+                            <span class="coin_name">１０えん</span>
+                            <span class="coin_count" onclick="toggleCoinCountDisplay('10yen')"><span id="10yen">0</span>　まい</span>
+                            <div class="coin_images empty" id="10yen-images"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1の位 -->
+                <div class="digit-column">
+                    <div class="digit-label">1</div>
+                    <div class="coin_id">
+                        <div class="coin_info">
+                            <span class="coin_name">５えん</span>
+                            <span class="coin_count" onclick="toggleCoinCountDisplay('5yen')"><span id="5yen">0</span>　まい</span>
+                            <div class="coin_images empty" id="5yen-images"></div>
+                        </div>
+                        
+                        <div class="coin_info">
+                            <span class="coin_name">１えん</span>
+                            <span class="coin_count" onclick="toggleCoinCountDisplay('1yen')"><span id="1yen">0</span>　まい</span>
+                            <div class="coin_images empty" id="1yen-images"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="total" id="totalDisplay" onclick="toggleTotalDisplay()">ごうけい　<span id="total">0</span>えん</p>
+        </div>
+    </div>
+
+    <!-- クイズボタン -->
+    <button class="quiz-button" onclick="toggleQuizModal()" title="クイズモード">
+        🎯
+    </button>
+
+    <!-- クイズオーバーレイ -->
+    <div id="quiz-overlay" class="quiz-overlay"></div>
+
+    <!-- クイズモーダル -->
+    <div id="quiz-modal" class="quiz-modal">
+        <h2>💰 クイズモード</h2>
+        <p>きんがくをにゅうりょくして、こうかをならべてみよう！</p>
+        
+        <div class="amount-input-group">
+            <label for="target-amount-input">もくひょうきんがく（えん）</label>
+            <input 
+                type="number" 
+                id="target-amount-input" 
+                placeholder="例: 150" 
+                min="1"
+                step="1"
+            >
+        </div>
+        
+        <div class="modal-buttons">
+            <button class="btn-secondary" onclick="toggleQuizModal()">キャンセル</button>
+            <button class="btn-primary" onclick="setTargetAmount()">スタート</button>
+        </div>
+    </div>
+
+    <!-- クイズ情報表示 -->
+    <div id="quiz-info" class="quiz-info">
+        <div class="quiz-info-header">
+            <h3>📝 もくひょう</h3>
+            <button class="close-quiz" onclick="resetQuiz()" title="クイズを終了">×</button>
+        </div>
+        <div class="target-amount"><span id="target-display">0</span>えん</div>
+        <button class="check-answer-btn" onclick="checkAnswer()">✓ こたえあわせ</button>
+        <div id="quiz-result" class="quiz-result"></div>
+    </div>
+
+    <script src="js/settings.js"></script>  <!-- YOLOの推論処理 -->
+    <script src="js/preprocess.js"></script>  <!-- 画像の前処理 -->
+    <script src="js/draw.js"></script> <!-- 描画処理 -->
+    <script src="js/result.js"></script>  <!-- 硬貨の枚数・金額表示 -->
+    <script src="js/color.js"></script>  <!-- 配色機能 -->
+    <script src="js/quiz.js"></script>  <!-- クイズ機能 -->
+    <script src="js/main.js"></script>  <!-- 全体の処理 + カメラ設定 -->
+</body>
+</html>
